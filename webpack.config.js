@@ -1,20 +1,16 @@
 
-var path = require('path')
-var webpack = require("webpack")
-
-
+const path = require('path')
+const webpack = require("webpack")
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
-    entry:  {
-      "frameRpc" : __dirname + "/src/export.js"
-    },
+    entry: __dirname + '/src/export.js',
     output: {
-        path: path.join(__dirname, "/dist/"),
-        filename: "[name].js"
+        path: __dirname + '/dist',
+        filename: 'frameRpc.js'
     },
-    devtool :"source-map",
+    devtool :"eval",
     plugins: [
-      new UglifyJSPlugin()
+        new UglifyJSPlugin()
     ]
 }

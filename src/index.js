@@ -1,6 +1,5 @@
 
 const cuid = require("cuid")
-const $ = require("jquery")
 const msgPrefix = "rpc_"
 const debug = function() {
   return window.frameRpcConfig && window.frameRpcConfig.debug == true ? true : false;
@@ -18,6 +17,14 @@ const msgtype = {
   // 也可以作为iframe转发给他的子iframe
   sys_action_message_forward : "sys_action_message_forward"
 
+}
+
+// 通过iframe的name属性，获取iframe
+const loadFrameByName = function(frameName) {
+    var frameArray = [].slice.call(document.getElementsByTagName("iframe")).filter(function(item,index) {return item.name == frameName});
+    if (frameArray && frameArray.length > 0) {
+        return frameArray[0]
+    }
 }
 
 
@@ -45,8 +52,8 @@ const listener = function(type, fn) {
                 // 获取来源对象
                 // 因为postMessage机制的限制，无法使用事件获取来源对象
                 var messageSrcWindow;       // 消息发送来源
-                if ($("iframe[name="+message.msgSrcFrameName+"]").length > 0) {
-                    messageSrcWindow = $("iframe[name="+message.msgSrcFrameName+"]")[0].contentWindow;
+                if (loadFrameByName(message.msgSrcFrameName)) {
+                    messageSrcWindow = loadFrameByName(message.msgSrcFrameName).contentWindow;
                 } else {
                     messageSrcWindow = top.window;
                 }

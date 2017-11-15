@@ -8,6 +8,7 @@
       <div>
         <input type="text" name="message" />
         <button class="btn_send" >send</button>
+          <div class="revc_message" ></div>
       </di>
 
 
@@ -20,7 +21,8 @@
               type : "show_message",
               content : message
             }, $("iframe[name=inframe]")[0].contentWindow).then(function(revc) {
-                console.log(revc)
+                $(".revc_message").empty().append(revc.content)
+                $("input[name=message]").val("")
             })
           })
         })

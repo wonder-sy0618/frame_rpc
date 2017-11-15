@@ -13,9 +13,9 @@
       <script type="text/javascript" >
         $(function() {
           window.frameRpc.listener("show_message", function(msg) {
-            $(".message_box ul").append("<li>"+msg.content+"</li>")
+            $(".message_box ul").prepend("<li>"+msg.content+"</li>")
             return {
-              "d" : "hello"
+              "content" : "hello : " + msg.content
             }
           })
         })
