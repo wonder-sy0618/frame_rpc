@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <body>
+      <div class="message_box" >
+        <ul>
+
+        </ul>
+      </div>
+
+      <script type="text/javascript" src="../dist/frameRpc.js" ></script>
+      <script type="text/javaScript" src="http://code.jquery.com/jquery-3.2.1.min.js" ></script>
+
+      <script type="text/javascript" >
+        $(function() {
+          window.frameRpc.listener("show_message", function(msg) {
+            $(".message_box ul").append("<li>"+msg.content+"</li>")
+            return {
+              "d" : "hello"
+            }
+          })
+        })
+      </script>
+
+
+  </body>
+</html>

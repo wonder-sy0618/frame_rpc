@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <body>
+      <script type="text/javascript" src="../dist/frameRpc.js" ></script>
+      <script type="text/javaScript" src="http://code.jquery.com/jquery-3.2.1.min.js" ></script>
+
+      <iframe src="inframe.html" name="inframe" ></iframe>
+      <div>
+        <input type="text" name="message" />
+        <button class="btn_send" >send</button>
+      </di>
+
+
+      <script type="text/javascript" >
+        window.frameRpcConfig = {debug : true}
+        $(function() {
+          $(".btn_send").click(function() {
+            var message = $("input[name=message]").val();
+            frameRpc.sender({
+              type : "show_message",
+              content : message
+            }, $("iframe[name=inframe]")[0].contentWindow).then(function(revc) {
+                console.log(revc)
+            })
+          })
+        })
+      </script>
+
+
+  </body>
+</html>
