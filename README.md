@@ -8,8 +8,9 @@
 在需要通讯的top和iframe页面中，引入frameRpc.js
 ``` html
     <script type="text/javascript" src="./dist/frameRpc.js" ></script>
+    <iframe name="demo_iframe" src="example_in_iframe.html" ></iframe>
 ```
-在iframe页面中，实现消息监听方法（服务）
+在iframe页面（example_in_iframe.html）中，实现消息监听方法（服务）
 ``` javascript
 window.frameRpc.listener("post_your_name", function(msg) {
   console.log("on post_your_name : " + msg.name);
@@ -23,7 +24,8 @@ window.frameRpc.listener("post_your_name", function(msg) {
 window.frameRpc.sender({
   type : "post_your_name",
   name : "demo"
-}).then(function(revc) {
+}, $("iframe[name='demo_iframe']")[0].contentWindow
+).then(function(revc) {
   console.log("on revc : " + revc.welcome_message);
 });
 ```
