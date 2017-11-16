@@ -5,7 +5,11 @@ An iframe-based rpc communication tool based on postMessage / onMessage
 
 
 ## example 
-in frame page
+in top and iframe page, include frameRpc.js
+``` html
+    <script type="text/javascript" src="./dist/frameRpc.js" ></script>
+```
+in iframe page
 ``` javascript
 window.frameRpc.listener("post_your_name", function(msg) {
   console.log("on post_your_name : " + msg.name);
@@ -16,7 +20,7 @@ window.frameRpc.listener("post_your_name", function(msg) {
 ```
 in top page
 ``` javascript
-window.frameRpc.send({
+window.frameRpc.sender({
   type : "post_your_name",
   name : "demo"
 }).then(function(revc) {
