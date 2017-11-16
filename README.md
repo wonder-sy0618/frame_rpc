@@ -7,8 +7,8 @@
 ## example 
 在需要通讯的top和iframe页面中，引入frameRpc.js
 ``` html
-    <script type="text/javascript" src="./dist/frameRpc.js" ></script>
-    <iframe name="demo_iframe" src="example_in_iframe.html" ></iframe>
+<script type="text/javascript" src="./dist/frameRpc.js" ></script>
+<iframe name="demo_iframe" src="example_in_iframe.html" ></iframe>
 ```
 在iframe页面（example_in_iframe.html）中，实现消息监听方法（服务）
 ``` javascript
