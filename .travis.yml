@@ -7,4 +7,5 @@ before_script:
   - npm install -g mocha
   - npm install
   - yarn example_server &
+  - curl http://127.0.0.1:8080/example/base_func/index.html
 

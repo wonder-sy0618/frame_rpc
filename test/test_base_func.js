@@ -10,7 +10,8 @@ describe("测试基本的top与第一层iframe间的通信功能", function() {
         const testMessage = "aaa";
 
         const browser = await puppeteer.launch({
-        //           headless: false
+        //           headless: false,
+            args: ['--no-sandbox']
         });
         try {
 
