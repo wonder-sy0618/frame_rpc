@@ -6,5 +6,5 @@ before_script:
   - npm install -g wepback
   - npm install -g mocha
   - npm install
-  - yarn example_server
+  - yarn example_server &
 
