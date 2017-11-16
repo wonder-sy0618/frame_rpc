@@ -1,0 +1,10 @@
+language: node_js
+node_js: stable
+
+before_script:
+  - npm install -g yarn
+  - npm install -g wepback
+  - npm install -g mocha
+  - npm install
+  - yarn example_server
+

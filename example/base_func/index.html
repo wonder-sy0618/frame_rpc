@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <body>
+      <script type="text/javascript" src="../../dist/frameRpc.js" ></script>
+      <script type="text/javaScript" src="://code.jquery.com/jquery-3.2.1.min.js" ></script>
+
+      <iframe src="inframe.html" name="inframe" ></iframe>
+
+      <div>
+            <label><input type="text" name="message" id="input_message" /></label>
+            <button id="btn_send" >send</button>
+            <div id="revc_message" ></div>
+      </div>
+
+
+      <script type="text/javascript" >
+        window.frameRpcConfig = {debug : true};
+        $(function() {
+          $("#btn_send").click(function() {
+            let message = $("input[name=message]").val();
+            frameRpc.sender({
+              type : "show_message",
+              content : message
+            }, $("iframe[name=inframe]")[0].contentWindow).then(function(revc) {
+                $("#revc_message").empty().append(revc.content);
+                $("input[name=message]").val("");
+            })
+          })
+        })
+      </script>
+
+
+  </body>
+</html>
