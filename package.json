@@ -1,6 +1,6 @@
 {
   "name": "frame_rpc",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "An iframe-based rpc communication tool based on postMessage / onMessage",
   "main": "index.js",
   "scripts": {
