@@ -1,42 +1,76 @@
 
-const assert = require('assert');
 const puppeteer = require('puppeteer');
+const assert = require('assert');
 
 describe("测试基本的top与第一层iframe间的通信功能", function() {
 
-    it('第一次消息通讯', async() => {
+    const pageurl = 'http://127.0.0.1:8080/example/universal_page/index.html';
+    const testMessage = "the test message";
 
-        const pageurl = 'http://127.0.0.1:8080/example/base_func/index.html';
-        const testMessage = "aaa";
+    let browerHandler;
+    let pageHandler;
 
-        const browser = await puppeteer.launch({
-        //           headless: false,
+    before(async() => {
+
+        browerHandler = await puppeteer.launch({
+            //    headless: false,
             args: ['--no-sandbox']
         });
-        try {
 
-            const page = await browser.newPage();
-            await page.goto(pageurl, {
-                waitUntil: 'networkidle2', // 等待网络状态为空闲的时候才继续执行
+        pageHandler = await browerHandler.newPage();
+        await pageHandler.goto(pageurl, {
+            waitUntil: 'networkidle2', // 等待网络状态为空闲的时候才继续执行
+        });
+
+        // 设置top
+        await pageHandler.evaluate((pageurl) => {
+            $("body")
+                .append('<div><input type="text" name="message" id="input_message" /><button id="btn_send" >send</button><div id="revc_message" ></div></div>')
+                .append('<iframe src="'+pageurl+'" name="inframe" ></iframe>');
+            $("#btn_send").click(function() {
+                let message = $("input[name=message]").val();
+                window.frameRpc.sender({
+                    type : "show_message",
+                    content : message
+                }, $("iframe[name=inframe]")[0].contentWindow).then(function(revc) {
+                    $("#revc_message").empty().append(revc.content);
+                    $("input[name=message]").val("");
+                })
             });
+            return new Promise((resolve, reject) => $("iframe[name=inframe]")[0].onload = resolve)
+        }, pageurl);
 
-            // 触发发送消息
-            await page.type('#input_message', testMessage);
-            await page.click("#btn_send");
+        // 设置iframe
+        await pageHandler.frames().find(f => f.name() === 'inframe').evaluate(() => {
+            $("body").append('<div class="message_box" ><ul></ul></div>');
+            window.frameRpc.listener("show_message", function(msg) {
+                $(".message_box ul").prepend("<li>"+msg.content+"</li>");
+                return {
+                    "content" : "hello : " + msg.content
+                }
+            });
+        });
 
-            // 断言inframe中接收到的消息
-            let frame_massge = await page.evaluate(() => document.inframe.document.querySelector(".message_box ul li").textContent);
-            assert.equal(frame_massge, testMessage);
-
-            // 断言top内接收到的回复消息展示
-            let revc_message = await page.evaluate(() => document.getElementById("revc_message").textContent);
-            assert.equal(revc_message, "hello : " + testMessage);
-
-        } finally {
-            await browser.close();
-        }
-
+        // 触发发送消息
+        await pageHandler.type('#input_message', testMessage);
+        await pageHandler.click("#btn_send");
     });
+
+    after(function() {
+        browerHandler.close();
+    });
+
+    it('断言inframe中接收到的消息', async() => {
+        let frame_massge = await pageHandler.evaluate(() => document.inframe.document.querySelector(".message_box ul li").textContent);
+        assert.equal(frame_massge, testMessage);
+    });
+
+    it('断言top内接收到的回复消息展示', async() => {
+        let revc_message = await pageHandler.evaluate(() => document.getElementById("revc_message").textContent);
+        assert.equal(revc_message, "hello : " + testMessage);
+    })
+
+
 
 });
 
