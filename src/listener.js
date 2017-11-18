@@ -1,6 +1,7 @@
 
 const commons = require("./commons.js");
 const sender = require("./sender.js");
+const msgserial = require("./msgserial");
 
 module.exports = function(type, fn) {
     if (!type || !fn) {
@@ -13,7 +14,7 @@ module.exports = function(type, fn) {
         if (!e.data || !e.data.indexOf || e.data.indexOf(commons.msgPrefix) != 0) {
             return;
         }
-        let message = JSON.parse(e.data.substring(commons.msgPrefix.length, e.data.length));
+        let message = msgserial.deserialization(e.data);
         if (commons.loadDebugStatus()) {
             console.log("[message] recv message", message, type, message.msgSrcFrameName + " -> " + window.location.href)
         }

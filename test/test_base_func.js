@@ -1,6 +1,8 @@
 
 const puppeteer = require('puppeteer');
 const assert = require('assert');
+const sleepPromise = require("sleep-promise");
+const debug = false;
 
 describe("测试基本的top与第一层iframe间的通信功能", function() {
 
@@ -13,7 +15,7 @@ describe("测试基本的top与第一层iframe间的通信功能", function() {
     before(async() => {
 
         browerHandler = await puppeteer.launch({
-            //    headless: false,
+            headless: !debug,
             args: ['--no-sandbox']
         });
 
@@ -57,7 +59,7 @@ describe("测试基本的top与第一层iframe间的通信功能", function() {
     });
 
     after(function() {
-        browerHandler.close();
+        if (!debug) browerHandler.close();
     });
 
     it('断言inframe中接收到的消息', async() => {
@@ -68,7 +70,48 @@ describe("测试基本的top与第一层iframe间的通信功能", function() {
     it('断言top内接收到的回复消息展示', async() => {
         let revc_message = await pageHandler.evaluate(() => document.getElementById("revc_message").textContent);
         assert.equal(revc_message, "hello : " + testMessage);
-    })
+    });
+
+    it('测试top->iframe使用iframe的name作为target参数发送', async() => {
+        let message = "name target test, top->iframe";
+        // 发送消息并验证返回结果
+        await pageHandler.evaluate((message) => {
+            return window.frameRpc.sender({
+                type : 'show_message',
+                content : message
+            }, "inframe").then(function(msg) {
+                return msg;
+            })
+        }, message).then(msg => assert.equal(msg.content, "hello : " + message));
+        // 验证iframe内容
+        await pageHandler.frames().find(f => f.name() === 'inframe').evaluate(() => {
+            return $(".message_box ul li").first().text()
+        }).then(testMessage => assert.equal(testMessage, message));
+    });
+
+    it('测试iframe->top使用iframe的name作为target参数发送', async() => {
+        const message = "name target test, iframe->top";
+        const messageType = "iframe_2_top_test";
+        const messageRevc = "i received";
+        // 发送消息并验证返回结果
+        pageHandler.evaluate((messageType, messageRevc) => {
+            return new Promise(resolve => {
+                window.frameRpc.listener(messageType, function(msg) {
+                    resolve(msg);
+                    return messageRevc
+                });
+            })
+        }, messageType, messageRevc).then(msg => assert.equal(msg.content, message));
+        await sleepPromise(20);
+        // 验证iframe内容
+        await pageHandler.frames().find(f => f.name() === 'inframe').evaluate((messageType, message) => {
+            window.frameRpcConfig = {debug : true};
+            return window.frameRpc.sender({
+                type : messageType,
+                content : message
+            })
+        }, messageType, message).then(textMessage => assert.equal(textMessage, messageRevc));
+    });
 
 
 

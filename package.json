@@ -34,6 +34,7 @@
     "mocha": "^4.0.1",
     "path": "^0.12.7",
     "puppeteer": "^0.13.0",
+    "sleep-promise": "^2.0.0",
     "uglifyjs-webpack-plugin": "^1.0.0-rc.0",
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.4"
