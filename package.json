@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack",
     "example_server": "webpack-dev-server --content-base ./",
-    "test": "mocha -t 20000"
+    "test": "mocha -t 20000",
+    "coveralls": "cat ./coverage/lcov/lcov.info | ./node_modules/.bin/coveralls"
   },
   "repository": {
     "type": "git",
