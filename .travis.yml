@@ -10,3 +10,5 @@ before_script:
   - sleep 10s
   - curl http://127.0.0.1:8080/example/base_func/index.html
 
+after_script:
+    - npm run coveralls
