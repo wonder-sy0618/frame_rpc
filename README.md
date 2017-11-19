@@ -1,5 +1,6 @@
 [![Github Releases](https://img.shields.io/npm/l/express.svg)](https://github.com/wonder-sy0618/frame_rpc)
 [![Build Status](https://travis-ci.org/wonder-sy0618/frame_rpc.svg?branch=master)](https://travis-ci.org/wonder-sy0618/frame_rpc)
+[![Coverage Status](https://coveralls.io/repos/github/wonder-sy0618/frame_rpc/badge.svg?branch=master)](https://coveralls.io/github/wonder-sy0618/frame_rpc?branch=master)
 # frame_rpc
 简单的top页面与iframe页面间的RPC通讯工具
 
