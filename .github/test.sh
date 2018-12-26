@@ -1,3 +1,3 @@
 echo 'hello'
 
-tail -f main.workflow
+tail -f ./.github/main.workflow
