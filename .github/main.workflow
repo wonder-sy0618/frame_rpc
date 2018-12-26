@@ -6,4 +6,5 @@ workflow "New workflow" {
 action "docker://centos" {
   uses = "docker://centos"
   secrets = ["GITHUB_TOKEN"]
+  runs = "sh .github/test.sh"
 }
