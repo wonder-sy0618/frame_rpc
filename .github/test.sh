@@ -1,3 +1,3 @@
 echo 'hello'
 
-tail -f ../.travis.yml
+tail -f main.workflow
